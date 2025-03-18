@@ -1,0 +1,58 @@
+---
+title: "CO2 Trend Decomposition Analysis (2000-2010)"
+author: "Nguyễn Quốc Khánh"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+co2_data <- read.csv("C:/Users/ADMIN/Documents/Document/USTH/B3/Spatial analysis/co2_2000_2010.csv")
+
+# Check structure
+str(co2_data)
+head(co2_data)
+```
+
+```{r}
+# Convert to monthly time series starting Jan 2000
+co2_ts <- ts(co2_data$average, 
+              start = c(2000, 1), 
+              frequency = 12)
+```
+
+```{r}
+# Perform additive decomposition
+co2_decomposed <- decompose(co2_ts, type = "additive")
+
+# Plot components
+plot(co2_decomposed)
+```
+
+```{r}
+# Extract components
+components <- data.frame(
+  Date = seq.Date(from = as.Date("2000-01-01"), 
+                  by = "month", 
+                  length.out = length(co2_ts)),
+  Observed = co2_decomposed$x,
+  Trend = co2_decomposed$trend,
+  Seasonal = co2_decomposed$seasonal,
+  Random = co2_decomposed$random
+)
+
+# Plot observed vs decomposed trend
+ggplot(components, aes(x = Date)) +
+  geom_line(aes(y = Observed, color = "Observed")) +
+  geom_line(aes(y = Trend, color = "Decomposed Trend"), na.rm = TRUE) +
+  labs(title = "CO2 Levels: Observed vs Decomposed Trend",
+       y = "CO2 (ppm)",
+       color = "Legend") +
+  theme_minimal()
+```
+

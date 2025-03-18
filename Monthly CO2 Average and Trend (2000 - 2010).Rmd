@@ -1,0 +1,82 @@
+---
+title: "EDA"
+author: "Nguyen Quoc Khanh"
+date: "2025-03-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+```
+
+
+
+```{r}
+# File path (update if necessary)
+file_path <- "C:/Users/ADMIN/Documents/Document/USTH/B3/Spatial analysis/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/co2_2000_2010.csv"
+
+# Read the data
+co2_data <- read_csv(file_path)
+
+# Preview the dataset
+head(co2_data)
+
+```
+
+
+```{r}
+# Read data
+co2_data <- read_csv("C:/Users/ADMIN/Documents/Document/USTH/B3/Spatial analysis/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/co2_2000_2010.csv")
+
+# Create proper date column (FIXED)
+co2_data <- co2_data %>%
+  mutate(Date = ymd(paste(Year, Month, "01", sep = "-"))) %>%
+  arrange(Date)
+
+# Create plot
+ggplot(co2_data, aes(x = Date)) +
+  geom_line(aes(y = average), color = "blue", linewidth = 0.5) +
+  geom_line(aes(y = trend), color = "red", linewidth = 0.5) +
+  scale_x_date(
+    breaks = seq.Date(from = as.Date("2000-01-01"), 
+                    to = as.Date("2010-01-01"), 
+                    by = "2 years"),
+    date_labels = "%Y"
+  ) +
+  labs(
+    title = "Monthly CO2 Average and Trend (2000 - 2010)",
+    x = "Year",
+    y = "CO"[2]~"(ppm)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.grid.minor = element_blank()
+  ) +
+  annotate(
+    "rect",
+    xmin = as.Date("2008-07-01"), xmax = as.Date("2010-12-01"),
+    ymin = 365, ymax = 370,
+    fill = "white", alpha = 0.8
+  ) +
+  annotate(
+    "text",
+    x = as.Date("2010-06-01"), y = 370,
+    label = "Blue line: Average\nRed line: Trend",
+    hjust = 1, vjust = 0,
+    size = 3, color = "black" 
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.background = element_rect(color = "black", size = 0.5),
+    legend.key = element_rect(fill = "white")
+  ) +
+  scale_color_manual(values = c("blue", "red")) # Adjust color for the lines in the legend
+
+```
+
+
+
