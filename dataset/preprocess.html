@@ -11,7 +11,7 @@
 
 <meta name="author" content="Bui Thanh Vinh" />
 
-<meta name="date" content="2025-03-18" />
+<meta name="date" content="2025-03-19" />
 
 <title>preprocess</title>
 
@@ -352,25 +352,37 @@ display: none;
 
 <h1 class="title toc-ignore">preprocess</h1>
 <h4 class="author">Bui Thanh Vinh</h4>
-<h4 class="date">2025-03-18</h4>
+<h4 class="date">2025-03-19</h4>
 
 </div>
 
 
+<pre><code>we begin by ensuring both datasets share the same date and time format, and clearing out irrelevant data</code></pre>
 <pre class="r"><code>library(readr)</code></pre>
 <pre><code>## Warning: package &#39;readr&#39; was built under R version 4.4.2</code></pre>
-<pre class="r"><code>co2_data &lt;- read_csv(&quot;C:/Users/VINH/Desktop/Spacial&amp;temporal/dataset/dirty/co2_mm_gl.csv&quot;, skip = 51, col_names = c(&quot;Year&quot;, &quot;Month&quot;, &quot;CO2_Adjusted&quot;, &quot;Uncertainty_Adj&quot;, &quot;CO2_Raw&quot;, &quot;Uncertainty_Raw&quot;))</code></pre>
-<pre><code>## Rows: 540 Columns: 6
+<pre class="r"><code># --- Load and Filter CO2 Data ---
+co2_data &lt;- read_csv(&quot;C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/dirty/co2_mm_gl.csv&quot;, 
+                     skip = 5, 
+                     col_names = c(&quot;Year&quot;, &quot;Month&quot;, &quot;average&quot;, &quot;average_unc&quot;, &quot;trend&quot;, &quot;trend_unc&quot;))</code></pre>
+<pre><code>## Rows: 586 Columns: 6
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
-## dbl (6): Year, Month, CO2_Adjusted, Uncertainty_Adj, CO2_Raw, Uncertainty_Raw
+## chr (6): Year, Month, average, average_unc, trend, trend_unc
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>co2_data &lt;- co2_data[, c(&quot;Year&quot;, &quot;Month&quot;, &quot;CO2_Raw&quot;)]
+<pre class="r"><code># Keep only relevant columns: CO2 Average and Trend
+co2_data &lt;- co2_data[, c(&quot;Year&quot;, &quot;Month&quot;, &quot;average&quot;, &quot;trend&quot;)]
+
+# Filter for 2000-2010
 co2_filtered &lt;- subset(co2_data, Year &gt;= 2000 &amp; Year &lt;= 2010)
-write_csv(co2_filtered, &quot;co2_2000_2010.csv&quot;)
-anomaly_data &lt;- read_csv(&quot;C:/Users/VINH/Desktop/Spacial&amp;temporal/dataset/dirty/data.csv&quot;, skip = 5, col_names = c(&quot;Date&quot;, &quot;Anomaly&quot;))</code></pre>
+write_csv(co2_filtered, &quot;C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/co2_2000_2010.csv&quot;)
+
+
+# --- Load and Filter Temperature Anomaly Data ---
+anomaly_data &lt;- read_csv(&quot;C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/dirty/data.csv&quot;, 
+                         skip = 5, 
+                         col_names = c(&quot;Date&quot;, &quot;Anomaly&quot;))</code></pre>
 <pre><code>## Rows: 132 Columns: 2
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -378,13 +390,39 @@ anomaly_data &lt;- read_csv(&quot;C:/Users/VINH/Desktop/Spacial&amp;temporal/dat
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>anomaly_data$Year &lt;- as.integer(substr(anomaly_data$Date, 1, 4))
+<pre class="r"><code># Extract Year and Month
+anomaly_data$Year &lt;- as.integer(substr(anomaly_data$Date, 1, 4))
 anomaly_data$Month &lt;- as.integer(substr(anomaly_data$Date, 5, 6))
+
+# Keep only necessary columns
 anomaly_data &lt;- anomaly_data[, c(&quot;Year&quot;, &quot;Month&quot;, &quot;Anomaly&quot;)]
+
+# Filter for 2000-2010
 anomaly_filtered &lt;- subset(anomaly_data, Year &gt;= 2000 &amp; Year &lt;= 2010)
-write_csv(anomaly_filtered, &quot;anomaly_2000_2010.csv&quot;)
-print(&quot;Both datasets have been cleaned and saved successfully!&quot;)</code></pre>
-<pre><code>## [1] &quot;Both datasets have been cleaned and saved successfully!&quot;</code></pre>
+write_csv(anomaly_filtered, &quot;C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/anomaly_2000_2010.csv&quot;)
+
+
+# --- Load and Filter CH4 (Methane) Data ---
+ch4_data &lt;- read_csv(&quot;C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/dirty/ch4_mm_gl.csv&quot;, 
+                     skip = 5, 
+                     col_names = c(&quot;Year&quot;, &quot;Month&quot;, &quot;average&quot;, &quot;average_unc&quot;, &quot;trend&quot;, &quot;trend_unc&quot;))</code></pre>
+<pre><code>## Rows: 539 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (6): Year, Month, average, average_unc, trend, trend_unc
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># Keep only relevant columns: CH4 Average and Trend
+ch4_data &lt;- ch4_data[, c(&quot;Year&quot;, &quot;Month&quot;, &quot;average&quot;, &quot;trend&quot;)]
+
+# Filter for 2000-2010
+ch4_filtered &lt;- subset(ch4_data, Year &gt;= 2000 &amp; Year &lt;= 2010)
+write_csv(ch4_filtered, &quot;C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/ch4_2000_2010.csv&quot;)
+
+
+print(&quot;All datasets (CO2, CH4, and Anomaly) have been cleaned and saved successfully!&quot;)</code></pre>
+<pre><code>## [1] &quot;All datasets (CO2, CH4, and Anomaly) have been cleaned and saved successfully!&quot;</code></pre>
 
 
 

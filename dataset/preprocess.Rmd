@@ -9,17 +9,31 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```
+we begin by ensuring all datasets share the same date and time format, and clearing out irrelevant data
+```
+
 ```{r}
 library(readr)
-co2_data <- read_csv("C:/Users/VINH/Desktop/Spacial&temporal/dataset/dirty/co2_mm_gl.csv", skip = 51, col_names = c("Year", "Month", "CO2_Adjusted", "Uncertainty_Adj", "CO2_Raw", "Uncertainty_Raw"))
-co2_data <- co2_data[, c("Year", "Month", "CO2_Raw")]
+co2_data <- read_csv("C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/dirty/co2_mm_gl.csv", 
+                     skip = 5, 
+                     col_names = c("Year", "Month", "average", "average_unc", "trend", "trend_unc"))
+co2_data <- co2_data[, c("Year", "Month", "average", "trend")]
 co2_filtered <- subset(co2_data, Year >= 2000 & Year <= 2010)
-write_csv(co2_filtered, "co2_2000_2010.csv")
-anomaly_data <- read_csv("C:/Users/VINH/Desktop/Spacial&temporal/dataset/dirty/data.csv", skip = 5, col_names = c("Date", "Anomaly"))
+write_csv(co2_filtered, "C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/co2_2000_2010.csv")
+anomaly_data <- read_csv("C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/dirty/data.csv", 
+                         skip = 5, 
+                         col_names = c("Date", "Anomaly"))
 anomaly_data$Year <- as.integer(substr(anomaly_data$Date, 1, 4))
 anomaly_data$Month <- as.integer(substr(anomaly_data$Date, 5, 6))
 anomaly_data <- anomaly_data[, c("Year", "Month", "Anomaly")]
 anomaly_filtered <- subset(anomaly_data, Year >= 2000 & Year <= 2010)
-write_csv(anomaly_filtered, "anomaly_2000_2010.csv")
-print("Both datasets have been cleaned and saved successfully!")
+write_csv(anomaly_filtered, "C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/anomaly_2000_2010.csv")
+ch4_data <- read_csv("C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/dirty/ch4_mm_gl.csv", 
+                     skip = 5, 
+                     col_names = c("Year", "Month", "average", "average_unc", "trend", "trend_unc"))
+ch4_data <- ch4_data[, c("Year", "Month", "average", "trend")]
+ch4_filtered <- subset(ch4_data, Year >= 2000 & Year <= 2010)
+write_csv(ch4_filtered, "C:/Users/VINH/Desktop/Analyzing-Global-Temperature-and-CO-Emission-Trends-2000-2010-/dataset/ch4_2000_2010.csv")
+print("All datasets (CO2, CH4, and Anomaly) have been cleaned and saved successfully!")
 ```
