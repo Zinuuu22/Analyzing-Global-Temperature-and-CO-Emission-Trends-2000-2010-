@@ -11,7 +11,7 @@ library(tidyverse)
 library(lubridate)
 ```
 
-
+##Explore Data Characteristics
 
 ```{r}
 # File path (update if necessary)
@@ -25,6 +25,7 @@ head(co2_data)
 
 ```
 
+##EDA
 
 ```{r}
 # Read data
@@ -78,5 +79,6 @@ ggplot(co2_data, aes(x = Date)) +
 
 ```
 
+#merge CO2 and Anomaly data
 
 
