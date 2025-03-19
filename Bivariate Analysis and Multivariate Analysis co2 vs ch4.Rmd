@@ -56,17 +56,19 @@ ggsave("C:/Users/ADMIN/Documents/Document/USTH/B3/Spatial analysis/CO2_CH4_scatt
        width = 8, height = 6, dpi = 300)
 ```
 ```{r}
-# Create Hexbin Density Plot
-ggplot(merged_data, aes(x = average_CH4, y = average_CO2)) +
-  geom_hex(bins = 30) +  # Adjust bin number for resolution
-  scale_fill_viridis_c(option = "plasma", name = "Density") +  # Viridis color scale
-  labs(title = "Hexbin Density Plot of CH4 vs CO2 Concentrations (2000-2010)",
-       x = "CH4 Concentration (ppb)",
-       y = "CO2 Concentration (ppm)") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-        legend.position = "right")
+# Positive Correlation:
+# There is a strong positive linear relationship between CO₂ and CH₄ concentrations. 
+# As CO₂ concentrations increase (from left to right on the x-axis), CH₄ concentrations also tend to increase (from bottom to top on the y-axis).
+
+# Regression Line:
+# The blue regression line indicates the general trend of the data. It is upward sloping, confirming the positive correlation between the two variables.
+# This suggests that increases in CO₂ concentration are associated with increases in CH₄ concentration.
+
+# Data Spread:
+# Most of the data points are clustered along the regression line, suggesting that there is a relatively strong and consistent relationship between CO₂ and CH₄ over the study period.
+# However, there are some points that deviate more from the line, which could represent outliers or specific months/years with anomalous readings.
 ```
+
 
 ```{r}
 # Create Hexbin Density Plot
@@ -79,8 +81,20 @@ ggplot(merged_data, aes(x = average_CH4, y = average_CO2)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"),
         legend.position = "right")
+```
+```{r}
+# Relationship Between CO₂ and CH₄:
+# There is a clear positive correlation between CH₄ and CO₂ concentrations. 
+# As the CH₄ concentration increases (moving right on the x-axis), the CO₂ concentration tends to increase as well (moving upward on the y-axis).
+# The densest regions are located in the higher ranges of both CO₂ and CH₄ concentrations, suggesting that higher concentrations of one gas are associated with higher concentrations of the other.
+
+# Density Distribution:
+# The data points appear to be clustered in certain areas, with a noticeable concentration between 1770-1790 ppb for CH₄ and 370-380 ppm for CO₂.
+# The relationship is strongest in the central to upper-middle range of both gases, with a slight tail at lower CO₂ and CH₄ concentrations.
 
 ```
+
+
 ```{r}
 # Box Plot 1: CO2 distribution across CH4 ranges (FIXED)
 p1 <- ggplot(merged_data, aes(x = cut(average_CH4, breaks = 5), y = average_CO2)) +  # Added closing )
@@ -103,6 +117,26 @@ p2 <- ggplot(merged_data, aes(x = cut(average_CO2, breaks = 5), y = average_CH4)
 # Display plots side-by-side
 p1 + p2
 ```
+```{r}
+# 1. CO₂ Distribution Across CH₄ Ranges (Left Plot):
+# The boxplot shows the distribution of CO₂ concentrations across different CH₄ concentration ranges.
+# As CH₄ concentration increases (from left to right on the x-axis), the median CO₂ concentration also appears to increase.
+# The interquartile range (IQR) also widens as CH₄ concentration increases, indicating more variability in CO₂ concentrations at higher CH₄ levels.
+# This suggests a positive relationship between CO₂ and CH₄, where higher CH₄ levels tend to correspond with higher CO₂ concentrations.
+
+# 2. CH₄ Distribution Across CO₂ Ranges (Right Plot):
+# The second boxplot shows the distribution of CH₄ concentrations across different CO₂ concentration ranges.
+# As CO₂ concentration increases (from left to right on the x-axis), the median CH₄ concentration also tends to increase.
+# The IQR also increases as CO₂ concentrations rise, indicating that as CO₂ concentrations become higher, CH₄ concentrations can vary more.
+# This further supports the positive correlation between CO₂ and CH₄ concentrations.
+
+# Key Observations:
+# Both plots suggest a positive relationship between CO₂ and CH₄ concentrations.
+# The range and variability of the data increase as the concentrations of the respective gases increase, indicating more variation at higher concentrations.
+# The outliers in the boxplots may represent months or years where the concentrations of CO₂ or CH₄ were unusually high or low.
+```
+
+
 ```{r}
 # Calculate correlation between CH4 and CO2
 correlation <- cor(merged_data$average_CH4, merged_data$average_CO2, use = "complete.obs")
@@ -131,6 +165,28 @@ ggplot(melted_cor, aes(Var1, Var2, fill = value)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+```{r}
+# Strong Positive Correlations:
+# The correlation between average_CO₂ and average_CH₄ is 0.78, indicating a strong positive correlation between the average concentrations of these gases.
+# The correlation between average_CO₂ and trend_CH₄ is 0.84, showing a similar strong relationship.
+# The trend_CO₂ and trend_CH₄ have a correlation of 0.89, which further confirms the positive relationship between the trends of CO₂ and CH₄ concentrations.
+
+# Highest Correlation:
+# The highest correlation in the matrix is 0.97 between average_CO₂ and trend_CO₂, suggesting that both the average and the trend of CO₂ are closely related.
+
+# Consistency in Relationships:
+# Across the matrix, most correlations are above 0.7, indicating strong positive relationships across all variables. 
+# This suggests that changes in one gas (CO₂ or CH₄) tend to coincide with changes in the other, both in terms of average concentrations and trends over time.
+
+# No Negative Correlations:
+# All the correlation values are positive, implying that there is no inverse relationship between the gases or their trends.
+
+# Conclusion:
+# The matrix highlights strong positive correlations between both the average and trend values of CO₂ and CH₄, reinforcing the earlier findings that increases in one gas are associated with increases in the other.
+# The high correlation values suggest that the concentrations and trends of CO₂ and CH₄ move in a similar pattern over the period studied.
+
+```
+
 
 ```{r}
 # Create date column
@@ -148,6 +204,27 @@ ggplot(merged_data, aes(x = Date)) +
   scale_color_manual(values = c("CH4" = "darkgreen", "CO2" = "orange")) +
   theme_minimal()
 ```
+```{r}
+# CO₂ Trend:
+# The CO₂ concentration is very low throughout the entire period, with the values hovering close to zero.
+# This suggests that there is no significant variation in CO₂ concentration across the 2000-2010 period in the dataset, which seems unusual given the expected rise in CO₂ emissions over time.
+
+# CH₄ Trend:
+# The CH₄ concentration shows more variability, but it is still relatively stable throughout the period, with fluctuations but no significant trend or noticeable increase over time.
+# The concentration of CH₄ is consistently above 1500 ppb, but it does not show a sharp rise or fall during the 10-year period.
+
+# Axes and Scale:
+# The two gases have different y-axes, with CH₄ plotted on the left and CO₂ on the right. 
+# The large difference in scale between the two gases might explain why CO₂'s changes are nearly imperceptible on this plot.
+# The CO₂ values appear to be in an unexpected range for the y-axis scale, potentially indicating an issue with the dataset or how it was plotted.
+
+# Conclusion:
+# The CO₂ values appear suspiciously low and nearly constant across the timeline, which may require further inspection of the dataset to ensure its accuracy.
+# CH₄, on the other hand, shows variability over time but lacks a clear increasing or decreasing trend.
+# This plot seems to indicate that while CH₄ concentrations may fluctuate, the CO₂ data might need re-evaluation due to the strange constant pattern.
+
+```
+
 
 ```{r}
 # K-means clustering
@@ -165,6 +242,30 @@ ggplot(merged_data, aes(average_CH4, average_CO2, color = Cluster)) +
        y = "CO2 (ppm)") +
   theme_minimal()
 ```
+```{r}
+# Key Observations:
+# Cluster 1 (Red):
+# The red points represent the first cluster, which is located in the lower-left region of the plot, with CO₂ concentrations around 375–380 ppm and CH₄ concentrations around 1770–1780 ppb.
+# This cluster consists of data points that exhibit lower concentrations of both gases compared to the others.
+
+# Cluster 2 (Green):
+# The green points form the second cluster, which is located in the middle of the plot, with CO₂ concentrations around 380–385 ppm and CH₄ concentrations around 1780–1790 ppb.
+# This cluster shows moderate concentrations of both gases, suggesting a mid-range grouping of data.
+
+# Cluster 3 (Blue):
+# The blue points represent the third cluster, which is situated in the upper-right region of the plot, with CO₂ concentrations around 385–390 ppm and CH₄ concentrations around 1790–1800 ppb.
+# This cluster consists of higher concentrations of both gases compared to the others.
+
+# Cluster Separation:
+# The plot clearly shows three distinct clusters, which suggests that there are different levels of CO₂ and CH₄ concentrations, possibly representing different periods or conditions with varying emission levels.
+# The clusters are somewhat linear in nature, suggesting that as the concentration of one gas increases, the other also increases, maintaining a consistent relationship within each cluster.
+
+# Conclusion:
+# The plot visually demonstrates that CO₂ and CH₄ concentrations form three distinct groups, which can be classified into different clusters based on their concentration levels.
+# These clusters reflect different emission scenarios or time periods, with each cluster showing a distinct range of concentrations for both gases.
+
+```
+
 
 ```{r}
 # Model CH4 as function of CO2 and trends
@@ -176,6 +277,31 @@ summary(model)
 # Diagnostic plots
 par(mfrow = c(2,2))
 plot(model)
+```
+```{r}
+# 1. Residuals vs Fitted:
+# This plot shows the residuals (the difference between observed and predicted values) plotted against the fitted (predicted) values.
+# Ideally, we want to see a random scatter with no clear pattern. In this plot, there appears to be a slight pattern where residuals tend to increase with fitted values. 
+# This could indicate that the model is not capturing all of the data's underlying structure, suggesting non-linearity or heteroscedasticity.
+
+# 2. Q-Q (Quantile-Quantile) Plot:
+# The Q-Q plot compares the distribution of residuals to a normal distribution. If the residuals are normally distributed, the points should lie along the diagonal line.
+# The plot appears to show some deviation from the diagonal line, especially at the extremes (both negative and positive). This suggests that the residuals are not perfectly normally distributed, 
+# possibly indicating skewness or heavy tails.
+
+# 3. Scale-Location:
+# The Scale-Location plot is used to check the assumption of homoscedasticity, which means that the variance of residuals should be constant across all levels of the fitted values.
+# The plot shows a random scatter without a distinct pattern, suggesting that heteroscedasticity (non-constant variance) is not a significant issue. However, there is a slight trend indicating that variance 
+# might still increase with fitted values, which is a potential issue.
+
+# 4. Residuals vs Leverage:
+# This plot identifies influential points that might have an outsized effect on the model's fit, often indicated by points that are far from the rest of the data and have high leverage.
+# The plot shows a few points with higher leverage, particularly in the top right corner. These points could potentially be outliers or influential data points that might disproportionately affect the model’s performance.
+
+# Conclusion:
+# The diagnostic plots suggest that the model may not be perfectly fitting the data. Specifically, there is some evidence of non-linearity, non-normality in residuals, and possible heteroscedasticity.
+# The residuals vs leverage plot highlights potential influential points that could be examined further.
+# Overall, while the model seems to capture the general trend, further improvement might be necessary, such as considering a different model or transforming variables to address the issues identified in these plots.
 ```
 
 
